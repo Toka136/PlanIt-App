@@ -50,8 +50,9 @@ const login = asyncWrapper(async (req, res, next) => {
         .status(200)
         .json({ statusText: responsStatus.SUCCESS, data: { token } });
     }
+    return next(appError.create("Invalid data", 402, responsStatus.FAILED));
   } else {
-    next(appError.create("Invalid data", 402, responsStatus.FAILED));
+    return next(appError.create("Invalid data", 402, responsStatus.FAILED));
   }
 });
 module.exports = {

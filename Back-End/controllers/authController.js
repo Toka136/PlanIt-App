@@ -46,9 +46,18 @@ const login = asyncWrapper(async (req, res, next) => {
     if (compare) {
       console.log("user.id", user);
       const token = await jwt({ id: user._id });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res
         .status(200)
-        .json({ statusText: responsStatus.SUCCESS, data: { token } });
+        .json({
+          statusText: responsStatus.SUCCESS,
+          data: { id: user._id, email: user.email, userName: user.userName },
+        });
     }
     return next(appError.create("Invalid data", 402, responsStatus.FAILED));
   } else {

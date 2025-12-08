@@ -95,6 +95,9 @@
 {
     text-align: start;
     width: 100%;
+    text-transform: capitalize;
+    color: #4a5565;
+    font-size: 18px;
 }
 .Auth .Auth_link
 {
@@ -106,4 +109,69 @@
 }
 .Auth .Auth_link:hover{
     text-decoration: underline;
+}
+.Auth .profil_avatar
+{
+    margin-bottom: 20px;
+
+}
+.profil_avatar p 
+{
+  font-size: 16px;
+  text-align: start;
+ 
+  color: #8c8e91
+}
+.profil_avatar p:nth-child(1)
+{
+     width: 80%;
+  margin: 30px auto 20px;
+  color: black;
+   font-size: 20px;
+  
+}
+.profil_avatar .profil_avatar_cont
+{
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    width: 80%;
+    margin: 10px auto;
+
+}
+.profil_avatar img
+{
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid #e5e7eb;
+}
+.Auth .profil_avatar label
+{
+    width: 60%;
+    background-color: #f9fafb !important;
+    color:#3e485a !important ;
+    padding: 5px 25px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: start;
+    margin-bottom: 10px;
+    
+}
+.Auth .profil_avatar label:hover
+{
+        background-color: #e5e7eb !important;
+
+}
+.Auth .profil_avatar .text_avatar
+{
+    text-align: start;
+    margin-left: 10px;
+    width: 100%;
+}
+.Auth .profil_avatar input[type="file"]
+{
+    display: none;
 }

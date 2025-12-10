@@ -4,7 +4,11 @@ import {faEnvelope,faLock} from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NavLink } from "react-router-dom";
+import { useLoginMutation } from "../API/authSlice";
+  import { ToastContainer, toast } from 'react-toastify';
 function Login() {
+  const errorNotify=()=>toast.error('Invalid data')
+  const [login]=useLoginMutation()
   const loginSchema = Yup.object({
     Email: Yup.string().required("Email is required"),
     passWord: Yup.string().required("Password is required"),
@@ -16,9 +20,25 @@ function Login() {
     },
     validationSchema: loginSchema,
     onSubmit: (values) => {
-      console.log("values=>", values);
+      loginUser(values)
     },
   });
+  const  loginUser=async(values)=>
+  {
+    const userdata=
+    {
+      email:values.Email,
+      password:values.passWord,
+    }
+       try{
+        const res=await login(userdata).unwrap();
+        console.log("res=>",res)
+       }catch(err)
+       {
+          errorNotify()
+          console.log("err",err)
+       }
+  }
   return (
     <div className="Auth">
       <div className="Auth_cont">
@@ -84,6 +104,7 @@ function Login() {
             Sign in
           </button>
         </form>
+        <ToastContainer/>
         <div className="mt-4 text-m link_parent"><p className="text-center">Don't have an account?<NavLink className="Auth_link" to={'/register'} >Sign up</NavLink></p></div>
       </div>
     </div>

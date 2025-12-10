@@ -6,6 +6,7 @@ const saltRounds = 10;
 const responsStatus = require("../utils/responseStatus");
 const jwt = require("../utils/JWTToken");
 const register = asyncWrapper(async (req, res, next) => {
+  console.log("body", req.body);
   console.log("req.file", req.file);
   const oldUser = await User.findOne({ email: req.body.email });
   if (oldUser) {
@@ -38,6 +39,7 @@ const register = asyncWrapper(async (req, res, next) => {
     .json({ statusText: responsStatus.SUCCESS, data: newUser });
 });
 const login = asyncWrapper(async (req, res, next) => {
+  console.log("body", req.body);
   const email = req.body.email;
   const password = req.body.password;
   const user = await User.findOne({ email: email });
@@ -46,16 +48,19 @@ const login = asyncWrapper(async (req, res, next) => {
     if (compare) {
       console.log("user.id", user);
       const token = await jwt({ id: user._id });
-      // res.cookie("token", token, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: "strict",
-      //   maxAge: 24 * 60 * 60 * 1000,
-      // });
-      res.status(200).json({
-        statusText: responsStatus.SUCCESS,
-        data: { id: user._id, email: user.email, userName: user.userName },
-      });
+      console.log("token", token);
+      return res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .status(200)
+        .json({
+          statusText: responsStatus.SUCCESS,
+          data: { id: user._id, email: user.email, userName: user.userName },
+        });
     }
     return next(appError.create("Invalid data", 400, responsStatus.FAILED));
   } else {

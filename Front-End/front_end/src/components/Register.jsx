@@ -48,6 +48,7 @@ function Register ()
     user.append('email',values.Email);
     user.append('password',values.passWord);
     user.append('avatar',values.avatar);
+    console.log("uaer",user)
     try
     {
       const response= await Register_user(user).unwrap();

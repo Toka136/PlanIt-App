@@ -6,8 +6,11 @@ const fs = require("fs");
 const path = require("path");
 const saltRounds = 10;
 const appError = require("../utils/appError");
+const jwt = require("jsonwebtoken");
 const getUser = asyncWrapper(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const token = req.cookie.token;
+  const info = await jwt.verify(token, process.env.JWTTOKEN);
+  const user = await User.findById(info.id);
   return res
     .status(200)
     .json({ statusText: responsStatus.SUCCESS, data: { user } });

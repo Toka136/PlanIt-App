@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const userRouing = require("../Back-End/routing/userRoting");
 const authRouing = require("../Back-End/routing/authRouting");
+const taskRouting = require("./routing/taskRouting");
 const { statusText, message } = require("./utils/appError");
 const responsStatus = require("./utils/responseStatus");
 const path = require("path");
@@ -32,6 +33,7 @@ mongoose.connect(process.env.MONGO_CONNECTION).then(async () => {
 
 app.use("/api/users", userRouing);
 app.use("/api/auth/", authRouing);
+app.use("/api/tasks", taskRouting);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use((req, res) => {
   res.status(404).json({

@@ -45,8 +45,8 @@ function Login() {
         <div className="logo">
           <img src="logo.png" alt="" className="logo_img" />
 
-          <p className="text-center fs-3">Welcome Back</p>
-          <p className="text-center fs-5 details">
+          <p className="text-center ">Welcome Back</p>
+          <p className="text-center fs-5 details ">
             Sign in to manage your tasks
           </p>
         </div>

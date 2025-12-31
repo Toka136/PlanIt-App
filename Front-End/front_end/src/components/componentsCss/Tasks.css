@@ -1,0 +1,56 @@
+.tasks_container {
+  background-color: #f9fafb;
+  width: 100%;
+  /* grid-template-columns:  ; */
+  padding: 30px;
+}
+.tasks_container h3 {
+  margin-bottom: 10px;
+  color: black;
+  font-size: 30px;
+  font-weight: 600;
+  text-align: start;
+}
+.tasks_container p {
+  text-align: start;
+  color: #4a5565;
+  font-size: 16px;
+}
+.Tasks {
+  margin-top: 30px;
+}
+.Tasks > div {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 30px;
+  border: 1px solid #e2e8f0;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.Tasks > div:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.Tasks div .icon_parent {
+  background-color: #dbeafe;
+  color: #155dfc;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+.Tasks div:nth-child(2) .icon_parent {
+  background-color: #d0fae5;
+  color: #009966;
+}
+.Tasks div:nth-child(3) .icon_parent {
+  background-color: #e0e7ff;
+  color: #4f39f6;
+}

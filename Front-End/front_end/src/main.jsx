@@ -6,17 +6,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { store } from './API/Store.js';
+import { AuthProvider } from './API/Context/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-     <Provider store={store}>
+    <AuthProvider>
     <BrowserRouter>
-   
+  
     <App />
-   
     </BrowserRouter>
-     </Provider>
+   </AuthProvider>
     
   </StrictMode>,
 )

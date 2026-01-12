@@ -47,10 +47,67 @@
   border-radius: 10px;
 }
 .Tasks div:nth-child(2) .icon_parent {
-  background-color: #d0fae5;
-  color: #009966;
+  background-color: #f3f4f6;
+  color: #4a5565;
 }
 .Tasks div:nth-child(3) .icon_parent {
-  background-color: #e0e7ff;
-  color: #4f39f6;
+  background-color: #d0fae5;
+  color: #009966;
+  /* background-color: #e0e7ff;
+  color: #4f39f6; */
+}
+.analysis {
+  display: grid;
+  grid-template-columns: 45% 45%;
+  justify-content: space-between;
+  /* align-items: center; */
+  background-color: #f9fafb;
+  padding: 30px;
+}
+.chart_info {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  row-gap: 10px;
+  column-gap: 5px;
+  text-align: center;
+  padding-left: 100px;
+}
+.chart_info p {
+  font-size: 20px;
+  font-weight: 600;
+  position: relative;
+  text-transform: capitalize;
+  text-align: start;
+}
+.chart_info p::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: -15%;
+  top: 30%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.chart_info .completed {
+  color: #10b981;
+}
+.chart_info .completed::before {
+  background-color: #10b981;
+}
+.chart_info .active {
+  color: #3b82f6;
+}
+.chart_info .active::before {
+  background-color: #3b82f6;
+}
+.chart_info .pending {
+  color: #4a5565;
+}
+.chart_info .pending::before {
+  background-color: #4a5565;
 }

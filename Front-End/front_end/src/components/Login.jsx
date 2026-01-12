@@ -3,16 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEnvelope,faLock} from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { NavLink } from "react-router-dom";
-import { useLoginMutation } from "../API/authSlice";
+import { NavLink, useNavigate } from "react-router-dom";
   import { ToastContainer, toast } from 'react-toastify';
+import { AuthProvider, useAuth } from "../API/Context/AuthContext";
 function Login() {
   const errorNotify=()=>toast.error('Invalid data')
-  const [login]=useLoginMutation()
+  const {Loginfun}=useAuth();
+      const auth=useAuth();
   const loginSchema = Yup.object({
     Email: Yup.string().required("Email is required"),
     passWord: Yup.string().required("Password is required"),
   });
+  const navigate=useNavigate();
   const loginFormik = useFormik({
     initialValues: {
       Email: "",
@@ -25,14 +27,13 @@ function Login() {
   });
   const  loginUser=async(values)=>
   {
-    const userdata=
-    {
-      email:values.Email,
-      password:values.passWord,
-    }
+    console.log("Auth Context Value:", auth);
+    console.log("values",values)
        try{
-        const res=await login(userdata).unwrap();
-        console.log("res=>",res)
+        const res=await Loginfun(values.Email,values.passWord);
+          console.log("res=>",res)
+        navigate('/homepage');
+        
        }catch(err)
        {
           errorNotify()

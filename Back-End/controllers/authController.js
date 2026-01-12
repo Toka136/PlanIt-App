@@ -44,6 +44,7 @@ const login = asyncWrapper(async (req, res, next) => {
   const password = req.body.password;
   const user = await User.findOne({ email: email });
   if (user) {
+    console.log("user", user);
     const compare = await bcrypt.compare(password, user.password);
     if (compare) {
       console.log("user.id", user);

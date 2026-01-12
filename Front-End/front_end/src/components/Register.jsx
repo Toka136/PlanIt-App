@@ -3,11 +3,9 @@ import {faEnvelope,faLock,faUser} from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../API/authSlice";
 import { useState } from "react";
 function Register ()
 {
-  const [Register_user]=useRegisterMutation();
   const [imgUrl,setImageUrl]=useState('');
   const navigate=useNavigate()
     const registerSchema = Yup.object({
@@ -29,6 +27,7 @@ function Register ()
     validationSchema: registerSchema,
     onSubmit: (values) => {
       console.log("values=>", values);
+
       register(values)
     },
   });
@@ -51,8 +50,7 @@ function Register ()
     console.log("uaer",user)
     try
     {
-      const response= await Register_user(user).unwrap();
-      console.log("response",response)
+       
        navigate('/login')
     }catch(err){
       console.log("error",err)

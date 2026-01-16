@@ -8,8 +8,10 @@ const saltRounds = 10;
 const appError = require("../utils/appError");
 const jwt = require("jsonwebtoken");
 const getUser = asyncWrapper(async (req, res, next) => {
-  const token = req.cookie.token;
+  const token = req.cookies.token;
+  console.log("token=>", token);
   const info = await jwt.verify(token, process.env.JWTTOKEN);
+  console.log("info=>", info);
   const user = await User.findById(info.id);
   return res
     .status(200)

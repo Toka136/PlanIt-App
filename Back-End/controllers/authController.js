@@ -53,14 +53,19 @@ const login = asyncWrapper(async (req, res, next) => {
       return res
         .cookie("token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: false,
           sameSite: "lax",
           maxAge: 24 * 60 * 60 * 1000,
         })
         .status(200)
         .json({
           statusText: responsStatus.SUCCESS,
-          data: { id: user._id, email: user.email, userName: user.userName },
+          data: {
+            id: user._id,
+            email: user.email,
+            userName: user.userName,
+            avatar: user.avatar,
+          },
         });
     }
     return next(appError.create("Invalid data", 400, responsStatus.FAILED));

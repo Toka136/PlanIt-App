@@ -6,7 +6,12 @@ import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
   import { ToastContainer, toast } from 'react-toastify';
 import { AuthProvider, useAuth } from "../API/Context/AuthContext";
+import { useEffect } from "react";
 function Login() {
+  useEffect(()=>
+  {
+    localStorage.clear();
+  },[])
   const errorNotify=()=>toast.error('Invalid data')
   const {Loginfun}=useAuth();
       const auth=useAuth();
@@ -27,6 +32,7 @@ function Login() {
   });
   const  loginUser=async(values)=>
   {
+     localStorage.clear()
     console.log("Auth Context Value:", auth);
     console.log("values",values)
        try{

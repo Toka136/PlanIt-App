@@ -1,34 +1,55 @@
-interface Shape{
-    draw():void;
+interface Mobile{
+    serialNuber():void;
+    price():void;
 }
-class Rectangle implements Shape{
-    draw(): void {
-        console.log("Rectangle");
+class Iphone implements Mobile{
+    serialNuber():void{
+        console.log("1234568");
     }
-}
-class Circle implements Shape{
-    draw(): void {
-        console.log("Circle");
-    }
-}
-class shapeDecorater implements Shape{
-    shape:Shape;
-    constructor(shape:Shape){
-        this.shape=shape;
-    }
-    draw(): void {
-        this.shape.draw();
+    price():void{
+        console.log("1200");
     }
 }
-class RedShape extends shapeDecorater{
-    constructor(shape:Shape){
-        super(shape);
+class Samsung implements Mobile{
+    serialNuber():void{
+        console.log("123469");
     }
-    draw(): void {
-        this.shape.draw();
-        console.log("RedShape");
+    price():void{
+        console.log("2000");
     }
 }
-let normalShape=new Rectangle();
-normalShape =new RedShape(normalShape);
-normalShape.draw();
+class Blackberry implements Mobile{
+    serialNuber():void{
+        console.log("1234567");
+    }
+    price():void{
+        console.log("800");
+    }
+}
+class MobileFacade{
+    blackberry:Blackberry;
+    iphone:Iphone;
+    samsung:Samsung;
+    constructor(){
+        this.blackberry=new Blackberry();
+        this.iphone=new Iphone();
+        this.samsung=new Samsung();
+    }
+    IphoneInfo():void{
+        this.iphone.serialNuber();
+        this.iphone.price();
+    }
+    SamsungInfo():void{
+        this.samsung.serialNuber();
+        this.samsung.price();
+    }
+    BlackberryInfo():void{
+        this.blackberry.serialNuber();
+        this.blackberry.price();
+    }
+
+}
+const facade=new MobileFacade();
+facade.IphoneInfo();
+facade.SamsungInfo();
+facade.BlackberryInfo();

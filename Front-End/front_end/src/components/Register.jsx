@@ -4,10 +4,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../API/Context/AuthContext";
 function Register ()
 {
   const [imgUrl,setImageUrl]=useState('');
-  const navigate=useNavigate()
+  const navigate=useNavigate();
+  const {Registerfun}=useAuth();
     const registerSchema = Yup.object({
     FullName: Yup.string().required("FullName is required"),
     Email: Yup.string().required("Email is required"),
@@ -42,15 +44,20 @@ function Register ()
   }
   const register=async (values)=>
   {
+    console.log("regValues=>>>",values)
     const user=new FormData()
     user.append('userName',values.FullName);
     user.append('email',values.Email);
     user.append('password',values.passWord);
-    user.append('avatar',values.avatar);
-    console.log("uaer",user)
+    const file=values.avatar;
+    user.append('avatar',file);
+  for (let pair of user.entries()) {
+    console.log(pair[0] + ': ' + pair[1]);
+}
     try
     {
-       
+       await  Registerfun(user);
+        localStorage.clear()
        navigate('/login')
     }catch(err){
       console.log("error",err)

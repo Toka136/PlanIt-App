@@ -48,7 +48,7 @@ app.use((error, req, res, next) => {
       message: error.message,
     });
   }
-  console.log("error here");
+  console.log("error here", error);
 
   return res.status(error.statusCode || 500).json({
     status: error.status || responsStatus.ERROR,

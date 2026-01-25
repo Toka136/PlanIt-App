@@ -4,6 +4,7 @@ import { faCircleCheck, faCirclePlay, faHourglassStart, faListCheck } from '@for
 import '../componentsCss/Tasks.css'
 import TasskAnalysis from "./TasksAnalysis";
 import { useTasks } from "../../API/Context/TasksContext";
+import TaskFlowHeader from "../common/Header";
 // import { useEffect } from "react";
 function HomePage()
 {
@@ -24,6 +25,7 @@ const activeTasks = tasksList.filter((x) => x.status === "In Progress");
     const Colors=["#9ca3af","#10b981","#3b82f6"]
     return(
         <>
+     
         {Error!=null&&console.log("res=>>>",Error)}
          {loading&&<h1>Loading....</h1>}
          {Error!=null&&<h1>Error</h1>}

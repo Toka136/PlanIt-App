@@ -111,3 +111,26 @@
 .chart_info .pending::before {
   background-color: #4a5565;
 }
+.active_link {
+  color: #0e6d4d;
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  background-color: #40d5a378 !important;
+  display: block;
+}
+.active_link:hover {
+  text-decoration: underline;
+}
+.inactive_link {
+  color: #4a5565;
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  display: block;
+}
+.inactive_link:hover {
+  text-decoration: underline;
+}

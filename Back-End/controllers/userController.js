@@ -31,7 +31,7 @@ const updateUserAvatar = asyncWrapper(async (req, res, next) => {
     if (fs.existsSync(file)) {
       fs.unlinkSync(file);
     }
-    // console.log("req.file", req.file);
+    console.log("req.file", req.file);
     user.avatar = req.file ? req.file.filename : "defualt.webp";
     await user.save();
     return res
@@ -41,8 +41,11 @@ const updateUserAvatar = asyncWrapper(async (req, res, next) => {
   return next(appError.create("User Not found !!", 400, responsStatus.FAILED));
 });
 const updateUserName = asyncWrapper(async (req, res, next) => {
+  console.log("req.params.id", req.params.id);
   const user = await User.findById(req.params.id);
   if (user) {
+    console.log("user", user);
+    console.log("req.body.userName", req.body);
     user.userName = req.body.userName;
     await user.save();
     return res
@@ -52,8 +55,12 @@ const updateUserName = asyncWrapper(async (req, res, next) => {
   return next(appError.create("User Not found !!", 400, responsStatus.FAILED));
 });
 const updateUserPassword = asyncWrapper(async (req, res, next) => {
+  console.log("req.params.id", req.params.id);
+  console.log("req.body", req.body);
   const user = await User.findById(req.params.id);
+  // const pass = await bcrypt.hash(req.body.password, saltRounds);
   if (user) {
+    console.log("user", user);
     const c = await bcrypt.compare(req.body.currentPassword, user.password);
     if (c) {
       if (req.body.password.length < 8) {
@@ -61,8 +68,8 @@ const updateUserPassword = asyncWrapper(async (req, res, next) => {
           appError.create(
             "password must be at least 8 !!",
             400,
-            responsStatus.FAILED
-          )
+            responsStatus.FAILED,
+          ),
         );
       }
       const pass = await bcrypt.hash(req.body.password, saltRounds);
@@ -75,7 +82,7 @@ const updateUserPassword = asyncWrapper(async (req, res, next) => {
         .json({ statusText: responsStatus.SUCCESS, data: user });
     }
     return next(
-      appError.create("current pass wrong!!", 400, responsStatus.FAILED)
+      appError.create("current pass wrong!!", 400, responsStatus.FAILED),
     );
   }
   return next(appError.create("User Not found !!", 400, responsStatus.FAILED));

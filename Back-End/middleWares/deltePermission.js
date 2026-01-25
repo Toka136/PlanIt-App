@@ -9,10 +9,12 @@ module.exports = async (req, res, next) => {
   console.log("decode.id", decode.id);
   console.log("id", req.params.id);
   if (decode.id !== req.params.id) {
+    console.log("not equal");
     return next(
-      appError.create("Unauthorized access", 400, responsStatus.FAILED)
+      appError.create("Unauthorized access", 400, responsStatus.FAILED),
     );
   } else {
+    console.log("equal");
     next();
   }
 };

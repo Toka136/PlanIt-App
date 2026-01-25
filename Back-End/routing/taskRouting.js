@@ -6,5 +6,6 @@ router.route("/").get(taskController.getTasks).post(taskController.addTask);
 router
   .route("/:id")
   .delete(taskPermission, taskController.deleteTask)
-  .get(taskPermission, taskController.getTask);
+  .get(taskPermission, taskController.getTask)
+  .patch(taskPermission, taskController.updateTask);
 module.exports = router;

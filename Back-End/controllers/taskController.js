@@ -25,20 +25,41 @@ const getTasks = asyncWrapper(async (req, res, next) => {
   }
   return res.status(200).json({ status: responsStatus.SUCCESS, data: tasks });
 });
+const updateTask = asyncWrapper(async (req, res, next) => {
+  const body = req.body;
+  console.log("task update body", body);
+  const task = await Task.findById(body._id);
+  if (task) {
+    console.log("task", task);
+    task.title = body.title ? body.title : task.title;
+    task.description = body.description ? body.description : task.description;
+    task.dueDate = body.dueDate ? body.dueDate : task.dueDate;
+    task.priority = body.priority ? body.priority : task.priority;
+    task.status = body.status ? body.status : task.status;
+    await task.save();
+    res.status(200).json({ status: responsStatus.SUCCESS, data: task });
+  } else {
+    next(appError.create("task not found", 400, responsStatus.FAILED));
+  }
+});
 const addTask = asyncWrapper(async (req, res, next) => {
   const resp = await getuserInfo(req.cookies.token);
+  console.log("resp", resp);
   if (resp.status === "failed")
     next(appError.create(resp.id, 400, responsStatus.FAILED));
   else {
+    console.log("req.body", req.body);
     const task = Task({
-      title: req.body.title,
-      description: req.body.description,
-      dueDate: req.body.dueDate,
-      priority: req.body.priority,
+      title: req.body.body.title,
+      description: req.body.body.description,
+      dueDate: req.body.body.dueDate,
+      priority: req.body.body.priority,
       owner: resp.id,
     });
+
     await task.save();
-    return res.status(201).json({ status: responsStatus.SUCCESS, task });
+    console.log("new task=>", task);
+    return res.status(201).json({ status: responsStatus.SUCCESS, data: task });
   }
 });
 const deleteTask = asyncWrapper(async (req, res, next) => {
@@ -58,4 +79,5 @@ module.exports = {
   getTasks,
   deleteTask,
   getTask,
+  updateTask,
 };

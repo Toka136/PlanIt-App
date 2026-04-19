@@ -6,4 +6,6 @@ router
   .route("/register")
   .post(upload.single("avatar"), authController.register);
 router.route("/login").post(authController.login);
+router.route("/logOut").get(authController.logout);
+router.route("/refreshToken").get(authController.refreshToken);
 module.exports = router;

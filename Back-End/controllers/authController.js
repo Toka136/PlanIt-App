@@ -5,75 +5,96 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const responsStatus = require("../utils/responseStatus");
 const jwt = require("../utils/JWTToken");
+const jwtToken = require("jsonwebtoken");
+const authService = require("../services/authService");
 const register = asyncWrapper(async (req, res, next) => {
-  console.log("body", req.body);
-  console.log("req.file", req.file);
-  const oldUser = await User.findOne({ email: req.body.email });
-  if (oldUser) {
-    const err = appError.create(
-      "User already exist",
-      400,
-      responsStatus.FAILED
-    );
-    return next(err);
+  try {
+    const data = await authService.register(req.body, req.file);
+    return res.status(200).json({
+      statusText: responsStatus.SUCCESS,
+      data: data,
+    });
+  } catch (err) {
+    next(err);
   }
-  console.log("file", req.file);
-  if (req.body.password.length < 8) {
-    const err = appError.create(
-      "password must at least 8 charcters",
-      400,
-      responsStatus.FAILED
-    );
-    return next(err);
-  }
-  const pass = await bcrypt.hash(req.body.password, saltRounds);
-  const newUser = User({
-    email: req.body.email,
-    userName: req.body.userName,
-    password: pass,
-    avatar: req.file?.filename,
-  });
-  await newUser.save();
-  return res
-    .status(201)
-    .json({ statusText: responsStatus.SUCCESS, data: newUser });
 });
 const login = asyncWrapper(async (req, res, next) => {
-  console.log("body", req.body);
-  const email = req.body.email;
-  const password = req.body.password;
-  const user = await User.findOne({ email: email });
-  if (user) {
-    console.log("user", user);
-    const compare = await bcrypt.compare(password, user.password);
-    if (compare) {
-      console.log("user.id", user);
-      const token = await jwt({ id: user._id });
-      console.log("token", token);
-      return res
-        .cookie("token", token, {
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-          maxAge: 24 * 60 * 60 * 1000,
-        })
-        .status(200)
-        .json({
-          statusText: responsStatus.SUCCESS,
-          data: {
-            id: user._id,
-            email: user.email,
-            userName: user.userName,
-            avatar: user.avatar,
-          },
-        });
-    }
-    return next(appError.create("Invalid data", 400, responsStatus.FAILED));
-  } else {
-    return next(appError.create("Invalid data", 400, responsStatus.FAILED));
+  const dataLogin = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  try {
+    const data = await authService.login(dataLogin);
+    res.cookie("refreshToken", data.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+    return res
+      .cookie("token", data.token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000,
+        path: "/",
+      })
+      .status(200)
+      .json({
+        statusText: responsStatus.SUCCESS,
+        data: {
+          id: data.id,
+          email: data.email,
+          userName: data.userName,
+          avatar: data.avatar,
+        },
+      });
+  } catch (err) {
+    const errU = appError.create(err.message, 400, responsStatus.FAILED);
+    next(errU);
+  }
+});
+const logout = asyncWrapper(async (req, res, next) => {
+  await res.clearCookie("token");
+  return res.clearCookie("refreshToken").status(200).json({
+    statusText: responsStatus.SUCCESS,
+    data: {},
+  });
+});
+const refreshToken = asyncWrapper(async (req, res, next) => {
+  console.log("req.cookies.refreshToken", req.cookies.refreshToken);
+  const token = req.cookies.refreshToken;
+  try {
+    const data = await authService.refreshToken(token);
+    console.log("data", data);
+    res.cookie("refreshToken", data.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+    return res
+      .cookie("token", data.token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000,
+        path: "/",
+      })
+      .status(200)
+      .json({
+        statusText: responsStatus.SUCCESS,
+        data: data,
+      });
+  } catch (err) {
+    next(appError.create(err.message, 400, responsStatus.FAILED));
   }
 });
 module.exports = {
   register,
   login,
+  logout,
+  refreshToken,
 };

@@ -3,15 +3,9 @@ const Permission = require("../middleWares/deltePermission");
 const userController = require("../controllers/userController");
 const router = express.Router();
 const upload = require("../utils/multerCode");
+router.route("/:id").delete(Permission, userController.deleteUser);
+router.route("/profile/").get(userController.getUser);
 router
-  .route("/:id")
-  .delete(Permission, userController.deleteUser)
-  .get(Permission, userController.getUser);
-router
-  .route("/avatar/:id")
-  .patch(Permission, upload.single("avatar"), userController.updateUserAvatar);
-router.route("/username/:id").patch(Permission, userController.updateUserName);
-router
-  .route("/password/:id")
-  .patch(Permission, userController.updateUserPassword);
+  .route("/profile/update")
+  .patch(upload.single("avatar"), userController.updateUser);
 module.exports = router;

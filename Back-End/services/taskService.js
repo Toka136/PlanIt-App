@@ -10,10 +10,14 @@ const getTasks = async (token, query) => {
   const resp = await getuserInfo(token);
   if (resp.status === "failed")
     throw appError.create(resp.id, 401, responsStatus.FAILED);
-  const { priority, status, page = 1, limit = 10 } = query;
+  const { priority, status, page = 1, limit = 10, search } = query;
   let filter = { owner: resp.id };
-  if (status) filter.status = status;
-  if (priority) filter.priority = priority;
+  if (status && status !== "All") filter.status = status;
+  if (search)
+    filter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
   console.log("filter", filter);
   const skip = (page - 1) * limit;
   const data = await TaskRepo.getTasks(filter, skip, limit);

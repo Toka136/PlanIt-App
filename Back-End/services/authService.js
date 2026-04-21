@@ -17,14 +17,6 @@ const register = async (data, file) => {
     throw err;
   }
   console.log("file", file);
-  if (password.length < 8) {
-    const err = appError.create(
-      "password must at least 8 charcters",
-      400,
-      responsStatus.FAILED,
-    );
-    throw err;
-  }
   const pass = await bcrypt.hash(password, saltRounds);
   const newUser = {
     email: email,

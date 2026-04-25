@@ -47,6 +47,7 @@ const addTask = async (body, token) => {
   return task;
 };
 const updateTask = async (body) => {
+  console.log("body", body);
   const task = await TaskRepo.getTaskById(body.id);
   if (task) {
     console.log("task", task);

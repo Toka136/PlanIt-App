@@ -1,5 +1,5 @@
 const taskStatus = {
-  Notstrted: "Not Started",
+  Notstarted: "Not Started",
   InProgress: "In Progress",
   Completed: "Completed",
 };

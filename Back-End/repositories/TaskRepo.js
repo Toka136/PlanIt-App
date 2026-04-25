@@ -31,7 +31,7 @@ const getStats = async (id) => {
           $sum: { $cond: [{ $eq: ["$status", taskStatus.InProgress] }, 1, 0] },
         },
         notStartCount: {
-          $sum: { $cond: [{ $eq: ["$status", taskStatus.Notstrted] }, 1, 0] },
+          $sum: { $cond: [{ $eq: ["$status", taskStatus.Notstarted] }, 1, 0] },
         },
         completedCount: {
           $sum: { $cond: [{ $eq: ["$status", taskStatus.Completed] }, 1, 0] },

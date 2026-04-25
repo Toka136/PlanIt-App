@@ -49,14 +49,6 @@ const updateUser = async (token, body, file) => {
       );
     }
 
-    if (body.password.length < 8) {
-      throw appError.create(
-        "password must be at least 8 !!",
-        400,
-        responsStatus.FAILED,
-      );
-    }
-
     const hashedPassword = await bcrypt.hash(body.password, saltRounds);
     user.password = hashedPassword;
   }

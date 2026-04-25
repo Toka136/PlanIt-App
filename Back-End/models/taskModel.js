@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const taskStatus = require("../utils/taskStatus");
+const taskPeriority = require("../utils/taskPeriority");
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -19,11 +20,12 @@ const taskSchema = new mongoose.Schema({
   priority: {
     type: String,
     required: true,
+    enum: [taskPeriority.low, taskPeriority.meduim, taskPeriority.heigh],
   },
   status: {
     type: String,
-    default: taskStatus.Notstrted,
-    enum: [taskStatus.Completed, taskStatus.InProgress, taskStatus.Notstrted],
+    default: taskStatus.Notstarted,
+    enum: [taskStatus.Completed, taskStatus.InProgress, taskStatus.Notstarted],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

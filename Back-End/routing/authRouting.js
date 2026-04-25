@@ -8,7 +8,7 @@ router
   .route("/register")
   .post(
     upload.single("avatar"),
-    ValidationMiddleware(registerSchema),
+    ValidationMiddleware(registerSchema, 1),
     authController.register,
   );
 router.route("/login").post(authController.login);

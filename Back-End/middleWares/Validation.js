@@ -1,9 +1,12 @@
 const appError = require("../utils/appError");
 const responsStatus = require("../utils/responseStatus");
 
-const ValidationMiddleware = (schema) => {
+const ValidationMiddleware = (schema, bodynumber) => {
   return (req, res, next) => {
-    const result = schema.safeParse(req.body);
+    let result = null;
+    if (bodynumber === 1) result = schema.safeParse(req.body);
+    else if (bodynumber === 2) result = schema.safeParse(req.query);
+    else if (bodynumber === 0) result = schema.safeParse(req.params);
     if (result.success) {
       req.body = result.data;
       next();

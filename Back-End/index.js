@@ -8,8 +8,10 @@ const authRouing = require("../Back-End/routing/authRouting");
 const taskRouting = require("./routing/taskRouting");
 const { statusText, message } = require("./utils/appError");
 const responsStatus = require("./utils/responseStatus");
+const {connectRedis}=require("./config/redis")
 const path = require("path");
 dotenv.config();
+connectRedis()
 const app = express();
 app.use(express.json());
 app.use(

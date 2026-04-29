@@ -12,7 +12,7 @@ const responsStatus = require("../utils/responseStatus");
 const getUser = async (token) => {
   const info = await getuserInfo(token);
   if (info.status === "failed")
-    throw appError.create("invalid Token", 401, responsStatus.FAILED);
+    throw new appError("invalid Token", 401, responsStatus.FAILED);
   const options = {
     password: 0,
     token: 0,
@@ -26,12 +26,12 @@ const updateUser = async (token, body, file) => {
   const userId = await getuserInfo(token);
   console.log("userId", userId.id);
   if (userId.status === "failed") {
-    throw appError.create("invalid token", 401, responsStatus.FAILED);
+    throw new appError("invalid token", 401, responsStatus.FAILED);
   }
 
   const user = await UserRepo.getUSerById(userId.id);
   if (!user) {
-    throw appError.create("User Not found !!", 400, responsStatus.FAILED);
+    throw new appError("User Not found !!", 400, responsStatus.FAILED);
   }
   // ✅ update username
   if (body.userName) {
@@ -42,7 +42,7 @@ const updateUser = async (token, body, file) => {
     const isMatch = await bcrypt.compare(body.currentPassword, user.password);
 
     if (!isMatch) {
-      throw appError.create(
+      throw new appError(
         "current password is wrong!!",
         400,
         responsStatus.FAILED,
@@ -67,7 +67,7 @@ const updateUser = async (token, body, file) => {
 const deleteUser = async (token) => {
   const info = await getuserInfo(token);
   if (info.status === "failed")
-    throw appError.create("invalid Token", 401, responsStatus.FAILED);
+    throw new appError("invalid Token", 401, responsStatus.FAILED);
   return await UserRepo.deleteUseById(info.id);
 };
 

@@ -51,7 +51,7 @@ const login = asyncWrapper(async (req, res, next) => {
         },
       });
   } catch (err) {
-    const errU = appError.create(err.message, 400, responsStatus.FAILED);
+    const errU = new appError(err.message, 400, responsStatus.FAILED);
     next(errU);
   }
 });
@@ -89,7 +89,7 @@ const refreshToken = asyncWrapper(async (req, res, next) => {
         data: data,
       });
   } catch (err) {
-    next(appError.create(err.message, 400, responsStatus.FAILED));
+    next(new appError(err.message, 400, responsStatus.FAILED));
   }
 });
 module.exports = {

@@ -9,7 +9,7 @@ const register = async (data, file) => {
   const { userName, email, password } = data;
   const oldUser = await authRepo.findByEmail(email);
   if (oldUser) {
-    const err = appError.create(
+    const err = new appError(
       "User already exist",
       400,
       responsStatus.FAILED,
@@ -53,14 +53,14 @@ const login = async (data) => {
         refreshToken: user.refreshToken,
       };
     }
-    const err_invalid = appError.create(
+    const err_invalid = new appError(
       "Invalid data",
       400,
       responsStatus.FAILED,
     );
     throw err_invalid;
   }
-  const err_notfound = appError.create(
+  const err_notfound = new appError(
     "User not found",
     400,
     responsStatus.FAILED,
@@ -70,7 +70,7 @@ const login = async (data) => {
 const refreshToken = async (token) => {
   console.log("Refreshtoken", token);
   if (!token) {
-    const err_invalid = appError.create(
+    const err_invalid = new appError(
       "refresh token not found",
       400,
       responsStatus.FAILED,
@@ -81,7 +81,7 @@ const refreshToken = async (token) => {
     const decode = await jwtToken.verify(token, process.env.JWTTOKEN);
     console.log("decode", decode);
     if (!decode) {
-      const err_invalid = appError.create(
+      const err_invalid = new appError(
         "refresh token expired",
         400,
         responsStatus.FAILED,
@@ -106,7 +106,7 @@ const refreshToken = async (token) => {
           refreshToken: user.refreshToken,
         };
       } else {
-        const err_notfound = appError.create(
+        const err_notfound = new appError(
           "User Not found",
           400,
           responsStatus.FAILED,

@@ -18,7 +18,7 @@ const fileFilter = function (req, file, cb) {
     if (fileType === "image") {
       cb(null, true);
     } else {
-      cb(appError.create("inavlid file type", 400, responsStatus.FAILED));
+      cb(new appError("inavlid file type", 400, responsStatus.FAILED));
     }
   }
 };

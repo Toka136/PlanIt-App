@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
   if (decode.id !== req.params.id) {
     console.log("not equal");
     return next(
-      appError.create("Unauthorized access", 400, responsStatus.FAILED),
+      new appError("Unauthorized access", 400, responsStatus.FAILED),
     );
   } else {
     console.log("equal");

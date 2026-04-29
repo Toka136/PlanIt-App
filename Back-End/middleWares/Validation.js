@@ -13,7 +13,7 @@ const ValidationMiddleware = (schema, bodynumber) => {
     } else {
       console.log("result.error.issues[0]", result.error.issues[0]);
       next(
-        appError.create(
+        new appError(
           `${result.error.issues[0].path[0]} ${result.error.issues[0].message}`,
           400,
           responsStatus.FAILED,

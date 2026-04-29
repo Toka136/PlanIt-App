@@ -3,19 +3,19 @@ const asyncWrapper = require("../middleWares/asyncWrapper");
 const appError = require("../utils/appError");
 const responsStatus = require("../utils/responseStatus");
 const Task = require("../models/taskModel");
+const { deleteCache } = require("../utils/deleteCache");
 module.exports = asyncWrapper(async (req, res, next) => {
   const tokenCheck = await getuserInfo(req.cookies.token);
   if (tokenCheck.status === "failed")
-    next(appError.create(tokenCheck.id, 400, responsStatus.FAILED));
+    next(new appError(tokenCheck.id, 400, responsStatus.FAILED));
   console.log("req.params.id", req.params.id);
   const task = await Task.findById(req.params.id);
 
   if (task) {
-    console.log("task founded", task);
-    console.log("task.owner =>", task.owner);
-    console.log("tokenCheck.id", tokenCheck.id);
-    if (task.owner.equals(tokenCheck.id)) next();
+    if (task.owner.equals(tokenCheck.id)){
+          await deleteCache(tokenCheck.id)
+       next();}
     else
-      next(appError.create("Unauthorized access", 400, responsStatus.FAILED));
-  } else next(appError.create("task Not Found", 400, responsStatus.FAILED));
+      next(new appError("Unauthorized access", 400, responsStatus.FAILED));
+  } else next(new appError("task Not Found", 400, responsStatus.FAILED));
 });

@@ -17,6 +17,7 @@ const getUser = asyncWrapper(async (req, res, next) => {
     .json({ statusText: responsStatus.SUCCESS, data: user });
 });
 const deleteUser = asyncWrapper(async (req, res, next) => {
+  const token = req.cookies.token;
   const deletInfo = await UserServiece.deleteUser(req.cookies.token);
   return res
     .status(200)

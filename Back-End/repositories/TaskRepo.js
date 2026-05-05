@@ -20,6 +20,9 @@ const saveTaskD = async (task) => {
 const getTaskById = async (id) => {
   return await Task.findById(id);
 };
+const deleteTasksByOwner = async (ownerId) => {
+  return await Task.deleteMany({ owner: ownerId });
+};
 const getStats = async (id) => {
   const stats = await Task.aggregate([
     { $match: { owner: id } },
@@ -65,7 +68,7 @@ const getTasksCloseDate = async (id) => {
         status: { $ne: taskStatus.Completed },
       },
     },
-    { $sort: { diffInDays: 1 } },
+    { $sort: { diffInDays: 1, priority: 1 } },
     {
       $addFields: {
         relativeTime: {
@@ -93,4 +96,6 @@ module.exports = {
   saveTaskD,
   getStats,
   getTasksCloseDate,
+  deleteTasksByOwner,
+  
 };

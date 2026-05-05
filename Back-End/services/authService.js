@@ -16,13 +16,13 @@ const register = async (data, file) => {
     );
     throw err;
   }
-  console.log("file", file);
   const pass = await bcrypt.hash(password, saltRounds);
   const newUser = {
     email: email,
     userName: userName,
     password: pass,
-    avatar: file?.filename,
+    avatar: file?file.path:"https://res.cloudinary.com/dyntejquk/image/upload/v1778020582/default-avatar-icon-of-social-media-user-vector_o9rf94.jpg",
+    avatarPublicId:file?file.filename:"planIt-app/defualt_awpxfk"
   };
   await authRepo.createUser(newUser);
   return {
@@ -35,10 +35,8 @@ const register = async (data, file) => {
 const login = async (data) => {
   const user = await authRepo.findByEmail(data.email);
   if (user) {
-    console.log("user", user);
     const compare = await bcrypt.compare(data.password, user.password);
     if (compare) {
-      console.log("user.id", user);
       const token = await jwt({ id: user._id }, "1d");
       const refreshToken = await jwt({ id: user._id }, "7d");
       user.token = token;
@@ -68,7 +66,6 @@ const login = async (data) => {
   throw err_notfound;
 };
 const refreshToken = async (token) => {
-  console.log("Refreshtoken", token);
   if (!token) {
     const err_invalid = new appError(
       "refresh token not found",
@@ -77,9 +74,7 @@ const refreshToken = async (token) => {
     );
     throw err_invalid;
   } else {
-    console.log("token", token);
     const decode = await jwtToken.verify(token, process.env.JWTTOKEN);
-    console.log("decode", decode);
     if (!decode) {
       const err_invalid = new appError(
         "refresh token expired",
@@ -95,8 +90,6 @@ const refreshToken = async (token) => {
         user.token = newToken;
         user.refreshToken = newRefreshToken;
         await authRepo.saveUser(user);
-        console.log("newToken", newToken);
-        console.log("newRefreshToken", newRefreshToken);
         return {
           id: user._id,
           email: user.email,

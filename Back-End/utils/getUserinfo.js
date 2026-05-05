@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const getuserInfo = async (token) => {
   try {
     const info = await jwt.verify(token, process.env.JWTTOKEN);
-    console.log("infooo", info);
     const res = {
       status: "success",
       id: info.id,

@@ -8,7 +8,6 @@ module.exports = asyncWrapper(async (req, res, next) => {
   const tokenCheck = await getuserInfo(req.cookies.token);
   if (tokenCheck.status === "failed")
     next(new appError(tokenCheck.id, 400, responsStatus.FAILED));
-  console.log("req.params.id", req.params.id);
   const task = await Task.findById(req.params.id);
 
   if (task) {

@@ -25,7 +25,7 @@ const login = asyncWrapper(async (req, res, next) => {
   };
   try {
     const data = await authService.login(dataLogin);
-    res.cookie("refreshToken", data.refreshToken, {
+   await res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
@@ -63,11 +63,9 @@ const logout = asyncWrapper(async (req, res, next) => {
   });
 });
 const refreshToken = asyncWrapper(async (req, res, next) => {
-  console.log("req.cookies.refreshToken", req.cookies.refreshToken);
   const token = req.cookies.refreshToken;
   try {
     const data = await authService.refreshToken(token);
-    console.log("data", data);
     res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

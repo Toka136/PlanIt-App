@@ -5,7 +5,6 @@ const client=redis.createClient({
 client.on("error",(err)=>console.log("redisError",err))
 const connectRedis=async()=>{
     await client.connect()
-    console.log("redis connected")
 }
 module.exports={
     client,connectRedis

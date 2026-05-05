@@ -20,7 +20,6 @@ const updateTask = asyncWrapper(async (req, res, next) => {
 });
 const addTask = asyncWrapper(async (req, res, next) => {
   const task = await taskService.addTask(req.body, req.cookies.token);
-  console.log("new task=>", task);
   return res.status(201).json({ status: responsStatus.SUCCESS, data: task });
 });
 const deleteTask = asyncWrapper(async (req, res, next) => {
@@ -41,7 +40,6 @@ const getTasksStats = asyncWrapper(async (req, res, next) => {
 });
 const getTasksCloseDate = asyncWrapper(async (req, res, next) => {
   const tasks = await taskService.getTasksCloseDate(req.cookies.token);
-  console.log("tasks", tasks);
   return res.status(200).json({ status: responsStatus.SUCCESS, data: tasks });
 });
 module.exports = {

@@ -16,6 +16,9 @@ const userSchem = new mongoose.Schema({
   avatar: {
     type: String,
   },
+  avatarPublicId:{
+    type:String
+  },
   token: {
     type: String,
   },

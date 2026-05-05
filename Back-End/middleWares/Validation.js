@@ -11,7 +11,6 @@ const ValidationMiddleware = (schema, bodynumber) => {
       req.body = result.data;
       next();
     } else {
-      console.log("result.error.issues[0]", result.error.issues[0]);
       next(
         new appError(
           `${result.error.issues[0].path[0]} ${result.error.issues[0].message}`,

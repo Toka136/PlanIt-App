@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const userRouing = require("../Back-End/routing/userRoting");
 const authRouing = require("../Back-End/routing/authRouting");
@@ -10,7 +10,8 @@ const { statusText, message } = require("./utils/appError");
 const responsStatus = require("./utils/responseStatus");
 const {connectRedis}=require("./config/redis")
 const path = require("path");
-dotenv.config();
+const { upload_default } = require("./utils/uploadDefalt");
+
 connectRedis()
 const app = express();
 app.use(express.json());
@@ -20,17 +21,13 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 mongoose.connect(process.env.MONGO_CONNECTION).then(async () => {
   console.log("Connected to:", mongoose.connection.name);
   // console.log("connectd");
   const db = await mongoose.connection.db;
-  // console.log("db=>", db.name);
   const collections = await db.listCollections().toArray();
-  // console.log("DB Name:", mongoose.connection.name);
-
-  // console.log("Collections:");
-  // collections.forEach((col) => console.log(col.name));
 });
 
 app.use("/api/users", userRouing);
@@ -50,7 +47,6 @@ app.use((error, req, res, next) => {
       message: error.message,
     });
   }
-  console.log("error here", error);
 
   return res.status(error.statusCode || 500).json({
     status: error.status || responsStatus.ERROR,

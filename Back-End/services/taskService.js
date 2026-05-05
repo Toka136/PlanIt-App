@@ -8,7 +8,6 @@ const {client}=require("../config/redis");
 const { deleteCache } = require("../utils/deleteCache");
 
 const getTasks = async (token, query) => {
-  console.log("token", token);
   const resp = await getuserInfo(token);
   if (resp.status === "failed")
     throw new appError(resp.id, 401, responsStatus.FAILED);
@@ -20,13 +19,11 @@ const getTasks = async (token, query) => {
       { title: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } },
     ];
-  console.log("filter", filter);
   const skip = (page - 1) * limit;
   const key =`tasks:${resp.id}:status=${status||'All'}:search=${search||''}:page=${page}:limit=${limit}`;
   const cached=await client.get(key)
   if(cached)
   {
-    console.log("cached",cached)
     return JSON.parse(cached)
   }
   const data = await TaskRepo.getTasks(filter, skip, limit);
@@ -50,7 +47,6 @@ const getTasks = async (token, query) => {
 };
 const addTask = async (body, token) => {
   const resp = await getuserInfo(token);
-  console.log("resp", resp);
   if (resp.status === "failed")
     throw new appError(resp.id, 400, responsStatus.FAILED);
   const task = {
@@ -62,42 +58,47 @@ const addTask = async (body, token) => {
     owner: resp.id,
   };
   await TaskRepo.saveTask(task);
-  deleteCache(resp.id)
+  if (resp.id) {
+    await deleteCache(resp.id);
+}
   return task;
 };
 const updateTask = async (body) => {
-  console.log("body", body);
   const task = await TaskRepo.getTaskById(body.id);
   if (task) {
-    console.log("task", task);
     task.title = body.title ? body.title : task.title;
     task.description = body.description ? body.description : task.description;
     task.dueDate = body.dueDate ? body.dueDate : task.dueDate;
     task.priority = body.priority ? body.priority : task.priority;
     task.status = body.status ? body.status : task.status;
     if (task.status === "Completed") task.endDate = new Date();
-    await TaskRepo.saveTask(task);
+    const res=await TaskRepo.saveTaskD(task);
+     if (res.owner) {
+    await deleteCache(task.owner);
+}
     return task;
   } else {
     throw new appError("task not found", 400, responsStatus.FAILED);
   }
 };
 const deleteTask = async (id) => {
+  const task=await TaskRepo.getTaskById(id)
+  if(!task)
+    throw new appError("Task not found",400,responsStatus.FAILED)
     const deleteInfo = await TaskRepo.deleteTask(id);
+      if (task.owner) {
+    await deleteCache(task.owner);
+}
   return deleteInfo
 };
 const getTasksStats = async (token) => {
-  console.log("req.cookies.token", token);
   const owner_ID = await getuserInfo(token);
   if (owner_ID.status === "failed")
-    throw new appError("invalid token", 401, responsStatus.FAILED);
-  console.log("owner_ID", owner_ID.id);
+    throw new appError(owner_ID.id, 401, responsStatus.FAILED);
   const id = new mongoose.Types.ObjectId(owner_ID.id);
-  console.log("owner_ID", id);
   const cashed=await client.get(`tasks:${id}:stats`)
   if(cashed)
   {
-    console.log("cashed",cashed)
     return JSON.parse(cashed)
   }
   const stats = await TaskRepo.getStats(id);
@@ -127,12 +128,10 @@ const getTasksCloseDate = async (token) => {
   const owner_ID = await getuserInfo(token);
   if (owner_ID.status === "failed")
     throw new appError(owner_ID.id, 401, responsStatus.FAILED);
-  console.log("owner_ID", owner_ID.id);
   const id = new mongoose.Types.ObjectId(owner_ID.id);
   const cached=await client.get(`tasks${id}:CD`)
   if(cached)
   {
-    console.log("cached",cached)
     return JSON.parse(cached)
   }
   const tasksCD = await TaskRepo.getTasksCloseDate(id);

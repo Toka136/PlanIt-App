@@ -8,11 +8,8 @@ const authRouing = require("../Back-End/routing/authRouting");
 const taskRouting = require("./routing/taskRouting");
 const { statusText, message } = require("./utils/appError");
 const responsStatus = require("./utils/responseStatus");
-const {connectRedis}=require("./config/redis")
 const path = require("path");
 const { upload_default } = require("./utils/uploadDefalt");
-
-connectRedis()
 const app = express();
 app.use(express.json());
 app.use(
@@ -35,6 +32,7 @@ app.use("/api/auth/", authRouing);
 app.use("/api/tasks", taskRouting);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use((req, res) => {
+  
   res.status(404).json({
     statusText: responsStatus.FAILED,
     message: "This resource is not availabe",

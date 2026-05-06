@@ -24,8 +24,11 @@ const getTasks = async (token, query) => {
   const cached=await client.get(key)
   if(cached)
   {
-    return JSON.parse(cached)
+    console.log("cache hit")
+    console.log("cached",cached)
+    return cached
   }
+  console.log("cache miss")
   const data = await TaskRepo.getTasks(filter, skip, limit);
   const count = await TaskRepo.getTasksCount(filter);
   await client.set(key,JSON.stringify({
@@ -33,16 +36,14 @@ const getTasks = async (token, query) => {
     count,
     page,
     limit,
-    pages: Math.ceil(count / limit),
-  }),{
-    EX:60,
-  })
+    pages:limit?Math.ceil(count / limit):1,
+  }),{ex:60})
   return {
     data,
     count,
     page,
     limit,
-    pages: Math.ceil(count / limit),
+    pages:limit?Math.ceil(count / limit):1,
   };
 };
 const addTask = async (body, token) => {
@@ -110,7 +111,7 @@ const getTasksStats = async (token) => {
       completedCount: 0,
       completeRate: 0,
     }),{
-      EX:60,
+      ex:60,
     })
     return {
       count: 0,
@@ -120,7 +121,7 @@ const getTasksStats = async (token) => {
       completeRate: 0,
     }}
   await client.set(`tasks:${id}:stats`,JSON.stringify(stats[0]),{
-    EX:60,
+    ex:60,
   });
   return stats[0];
 };
@@ -136,7 +137,7 @@ const getTasksCloseDate = async (token) => {
   }
   const tasksCD = await TaskRepo.getTasksCloseDate(id);
   await client.set(`tasks:${id}:CD`,JSON.stringify(tasksCD),{
-    EX:60,
+    ex:60,
   })
   return tasksCD;
 };

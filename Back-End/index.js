@@ -51,6 +51,6 @@ app.use((error, req, res, next) => {
     message: error.message,
   });
 });
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT||4000, () => {
   console.log(` app listening on port ${process.env.PORT}`);
 });

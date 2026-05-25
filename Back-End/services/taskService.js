@@ -26,7 +26,7 @@ const getTasks = async (token, query) => {
   {
     console.log("cache hit")
     console.log("cached",cached)
-    return cached
+    return typeof cached === "string" ? JSON.parse(cached) : cached;
   }
   console.log("cache miss")
   const data = await TaskRepo.getTasks(filter, skip, limit);
@@ -100,7 +100,7 @@ const getTasksStats = async (token) => {
   const cashed=await client.get(`tasks:${id}:stats`)
   if(cashed)
   {
-    return JSON.parse(cashed)
+    return typeof cashed === "string" ? JSON.parse(cashed) : cashed;
   }
   const stats = await TaskRepo.getStats(id);
   if (stats.length === 0){
@@ -130,10 +130,10 @@ const getTasksCloseDate = async (token) => {
   if (owner_ID.status === "failed")
     throw new appError(owner_ID.id, 401, responsStatus.FAILED);
   const id = new mongoose.Types.ObjectId(owner_ID.id);
-  const cached=await client.get(`tasks${id}:CD`)
+  const cached=await client.get(`tasks:${id}:CD`)
   if(cached)
   {
-    return JSON.parse(cached)
+    return typeof cached === "string" ? JSON.parse(cached) : cached;
   }
   const tasksCD = await TaskRepo.getTasksCloseDate(id);
   await client.set(`tasks:${id}:CD`,JSON.stringify(tasksCD),{

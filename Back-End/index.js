@@ -26,7 +26,12 @@ mongoose.connect(process.env.MONGO_CONNECTION).then(async () => {
   const db = await mongoose.connection.db;
   const collections = await db.listCollections().toArray();
 });
-
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    uptime: process.uptime(),
+  });
+});
 app.use("/api/users", userRouing);
 app.use("/api/auth/", authRouing);
 app.use("/api/tasks", taskRouting);

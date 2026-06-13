@@ -27,16 +27,16 @@ const login = asyncWrapper(async (req, res, next) => {
     const data = await authService.login(dataLogin);
    await res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
     return res
       .cookie("token", data.token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
       })
@@ -68,16 +68,16 @@ const refreshToken = asyncWrapper(async (req, res, next) => {
     const data = await authService.refreshToken(token);
     res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
     return res
       .cookie("token", data.token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
         path: "/",
       })

@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://tasksflow8.netlify.app",
+    origin: process.env.FRONT_END_URL,
     credentials: true,
   })
 );
